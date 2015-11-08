@@ -8,6 +8,8 @@
 #ifndef LED_LED_H_
 #define LED_LED_H_
 
+#include "Arduino.h"
+
 class Led
 {
 

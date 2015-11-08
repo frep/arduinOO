@@ -5,7 +5,6 @@
  *      Author: frehnerp
  */
 
-#include "Arduino.h"
 #include "Led.h"
 
   Led::Led(int pinNr, boolean logicLevel)

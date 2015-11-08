@@ -22,6 +22,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/arduino/core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/arduino/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/Libraries/Led}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/Libraries/ArduinoSketch}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/Libraries/ButtonIndicator}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.1666260251" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -30,6 +32,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/arduino/core}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/arduino/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/Libraries/Led}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/Libraries/ArduinoSketch}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/arduinOO/Libraries/ButtonIndicator}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.263589566" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>
@@ -41,7 +45,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="libs|Libraries/*/?xamples" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="libs/*|Libraries/*/?xamples" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -55,4 +59,5 @@
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

@@ -1,19 +1,19 @@
 #include "arduinOO.h"
-#include "Led.h"
+#include "ButtonIndicator.h"
 
 #define activeLow true
 #define activeHigh false
 
-Led led(13, activeHigh);
+ButtonIndicator sketch;
 
 //The setup function is called once at startup of the sketch
 void setup()
 {
-
+	sketch.setup();
 }
 
 // The loop function is called in an endless loop
 void loop()
 {
-
+	sketch.loop();
 }
