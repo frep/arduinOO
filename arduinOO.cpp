@@ -1,9 +1,6 @@
 #include "arduinOO.h"
 #include "ButtonIndicator.h"
 
-#define activeLow true
-#define activeHigh false
-
 ButtonIndicator sketch;
 
 //The setup function is called once at startup of the sketch

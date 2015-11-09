@@ -44,24 +44,34 @@
       {
         if(isActiveLow)
         {
-        	// Button is pressed
+        	buttonPressed();
         }
         else
         {
-        	// Button is released
+        	buttonReleased();
         }
       }
       else
       {
         if(isActiveLow)
         {
-        	// Button is released
+        	buttonReleased();
         }
         else
         {
-        	// Button is pressed
+        	buttonPressed();
         }
       }
       state = getValue();
     }
+  }
+
+  void Button::buttonPressed()
+  {
+	  Serial.println("button pressed");
+  }
+
+  void Button::buttonReleased()
+  {
+	  Serial.println("button released");
   }

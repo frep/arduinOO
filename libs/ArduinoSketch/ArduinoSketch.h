@@ -8,10 +8,14 @@
 #ifndef ARDUINOSKETCH_H_
 #define ARDUINOSKETCH_H_
 
+#include "Arduino.h"
+
 class ArduinoSketch
 {
 
  public:
+  static const boolean activeLow = true;
+  static const boolean activeHigh = false;
   virtual ~ArduinoSketch();
   virtual void setup() = 0;
   virtual void loop() = 0;

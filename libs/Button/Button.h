@@ -18,7 +18,9 @@ public:
 	void initWithInternalPullup();
 
 	boolean getValue();
-	virtual void checkButton();
+	void checkButton();
+	virtual void buttonPressed();
+	virtual void buttonReleased();
 
 private:
 

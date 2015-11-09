@@ -10,6 +10,7 @@
 
 #include <ArduinoSketch.h>
 #include <Led.h>
+#include <Button.h>
 
 class ButtonIndicator: public ArduinoSketch {
 public:
@@ -18,6 +19,7 @@ public:
 	virtual void setup();
 	virtual void loop();
 	Led* led;
+	Button* button;
 };
 
 #endif /* BUTTONINDICATOR_H_ */
