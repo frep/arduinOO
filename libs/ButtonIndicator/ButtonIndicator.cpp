@@ -16,7 +16,10 @@ ButtonIndicator::~ButtonIndicator() {
 }
 
 void ButtonIndicator::setup(){
+	Serial.begin(115200);
 	led->init();
+    Serial.print("freeRam()=");
+    Serial.println(freeRam());
 }
 
 void ButtonIndicator::loop(){
