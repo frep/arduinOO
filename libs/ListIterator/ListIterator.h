@@ -13,17 +13,34 @@
 
 template<class T> class ListIterator {
 public:
-  ListIterator(Node<T>* begin):current(begin){}
+  ListIterator(Node<T>* begin):current(begin), first(begin){}
   virtual ~ListIterator(){}
-  //
+/*
   bool hasNext(){
     return current->next == 0? false : true;
   }
-  //
+*/
+  bool isDone(){
+	return current->next == 0 ? true : false;
+  }
+
+  Node<T>* firstNode(){
+	  return first;
+  }
+
+  Node<T>* nextNode(){
+    current = current->next;
+    return current;
+  }
+
+  Node<T>* currentNode(){
+	  return current;
+  }
+
   void set_begin(Node<T>* begin){
     current = begin;
   }
-  //
+/*
   T next(){
     Node<T>* temp = new Node<T>;
     temp = current->next;
@@ -37,9 +54,10 @@ public:
     current = temp;
     return current;
   }
-
+*/
 protected:
   Node<T>* current;
+  Node<T>* first;
 };
 
 

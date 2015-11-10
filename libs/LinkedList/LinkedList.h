@@ -14,89 +14,70 @@
 
 template<class T> class LinkedList {
 public:
-  //Constructor
+
   LinkedList():root(new Node<T>) {
     root->next = 0;
+    root->previous = 0;
+    _last = root;
+    nodeCount = 1;
    }
-   //Destructor
+
    virtual ~LinkedList() {}
-   //
+
    //Method for Push some Data at the End of the list
    void push_last(T data) {
-     Node<T>* temp = new Node<T>;
-     temp = root;
-     //The Iterating Part
-     while (temp->next != 0) {
-       	temp = temp->next;
-     }
-     //Pushing Part
+     Node<T>* temp = _last;
      _last = new Node<T>(0, data);
-     temp->next = _last; //new Node<T>(0, data);
+     temp->next = _last;
+     _last->previous = temp;
+     nodeCount++;
     }
 
-    void remove_last(){
-      int rsize = get_list_size() - 2;
-      int counter = 0;
-      ListIterator<T>* riterator = new ListIterator<T>(root);
-      while(riterator->hasNext()){
-        Node<T>* ntemp = riterator->next_node();
-        if(counter == rsize){
-          ntemp->next = NULL;
-          break;
-         }
-         counter++;
-	}
-	delete riterator;
-     }
+   void remove_last(){
+	 Node<T>* temp = _last;
+	 _last = _last->previous;
+	 _last->next = 0;
+	 delete temp;
+	 nodeCount--;
+   }
 
-    //Get The List Size
-    int get_list_size() {
-      int counter = 0;
-      Node<T>* temp; //= new ListNode;
-      temp = root;
-      while (temp->next != NULL) {
-        temp = temp->next;
-        counter++;
-      }
-      //
-      return counter;
-    }
+   void remove_first(){
+	   Node<T>* temp = root;
+	   root = root->next;
+	   root->previous = 0;
+	   delete temp;
+	   nodeCount--;
+   }
 
-    //Verify the Emptiness of the list
-    boolean isEmpty(){
-      return get_list_size() == 0? true : false;
-    }
+   int get_list_size(){
+	   return nodeCount;
+   }
 
     void remove_index(int index){
-      if (index > 0) {
-        int counter = 0;
-        ListIterator<T>* riterator = new ListIterator<T>(root);
-        Node<T>* temp;
-        while (riterator->hasNext()) {
-          temp = riterator->next_node();
-          if (counter == index - 1)
-            break;
-            counter++;
-          }
-          temp->next = temp->next->next;
-          delete riterator;
-	}
+    	if(index == (nodeCount - 1)){
+    		remove_last();
+    	}
+    	else if(index == 0){
+    		remove_first();
+    	}
+    	else if(index > 0 && index < (nodeCount - 1)){
+    		int counter = 0;
+            ListIterator<T>* riterator = new ListIterator<T>(root);
+            Node<T>* temp = root;
+            while(counter < index){
+            	temp = riterator->nextNode();
+            	counter++;
+            }
+            temp->previous->next = temp->next;
+            temp->next->previous = temp->previous;
+            delete temp;
+            delete riterator;
+            nodeCount--;
+    	}
+    	else{
+    		// wrong index!
+    	}
     }
-
-  //Get Selected Index
-  T get_index(int index){
-    int counter = 0;
-    T temp;
-    ListIterator<T>* iterator = new ListIterator<T>(root);
-    while(iterator->hasNext()){
-      temp = iterator->next();
-      	if(counter == index)break;
-      counter++;
-     }
-     //
-     delete iterator;
-     return temp;
-  }
 
   //Get the First Node;
   Node<T>* begin() {
@@ -111,6 +92,7 @@ public:
 protected:
   Node<T>* root;
   Node<T>* _last;
+  int nodeCount;
 };
 
 #endif /* LINKEDLIST_H_ */
