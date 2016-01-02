@@ -47,6 +47,13 @@ public:
 	void printInt2xCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
 	void printInt2xCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor);
 
+	void printFloat(unsigned char x_pos, unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor);
+	void printFloatCentered(unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor);
+	void printFloatCentered(unsigned char y_pos, unsigned char center, float number, int precision, unsigned long textColor, unsigned long backgroundColor);
+	void printFloat2x(unsigned char x_pos, unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor);
+	void printFloat2xCentered(unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor);
+	void printFloat2xCentered(unsigned char y_pos, unsigned char center, float number, int precision, unsigned long textColor, unsigned long backgroundColor);
+
 	// Lines and figures
 	void drawHLine(unsigned char x_pos_start, unsigned char x_pos_stop, unsigned char y_pos, unsigned long color);
 	void drawVLine(unsigned char x_pos, unsigned char y_pos_start, unsigned char y_pos_stop, unsigned long color);
@@ -99,6 +106,7 @@ private:
 	void OLED_Text_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
 	void OLED_Text2x_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
 	uint getTextPixels(const char text[], uint charWidth, uint spaceWidth);
+	void floatToString(float number, int precision, char* string);
 
 };
 

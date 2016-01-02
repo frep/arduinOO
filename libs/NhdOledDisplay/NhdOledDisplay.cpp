@@ -7,7 +7,6 @@
 
 #include "NhdOledDisplay.h"
 #include <Arduino.h>
-
 #include <fonts.h>
 
 
@@ -388,6 +387,48 @@ void NhdOledDisplay::printInt2xCentered(unsigned char y_pos, unsigned char cente
 	printText2xCentered(y_pos, center, text, textColor, backgroundColor);
 }
 
+void NhdOledDisplay::printFloat(unsigned char x_pos, unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	floatToString(number, precision, text);
+	printText(x_pos, y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printFloatCentered(unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	floatToString(number, precision, text);
+	printTextCentered(y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printFloatCentered(unsigned char y_pos, unsigned char center, float number, int precision, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	floatToString(number, precision, text);
+	printTextCentered(y_pos, center, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printFloat2x(unsigned char x_pos, unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	floatToString(number, precision, text);
+	printText2x(x_pos, y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printFloat2xCentered(unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	floatToString(number, precision, text);
+	printText2xCentered(y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printFloat2xCentered(unsigned char y_pos, unsigned char center, float number, int precision, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	floatToString(number, precision, text);
+	printText2xCentered(y_pos, center, text, textColor, backgroundColor);
+}
+
 void NhdOledDisplay::drawHLine(unsigned char x_pos_start, unsigned char x_pos_stop, unsigned char y_pos, unsigned long color)
 {
 	unsigned char lower = x_pos_start;
@@ -516,6 +557,18 @@ uint NhdOledDisplay::getTextPixels(const char text[], uint charWidth, uint space
 		numOfSpaces = numOfChars - 1;
 	}
 	return numOfChars * charWidth + numOfSpaces * spaceWidth;
+}
+
+void NhdOledDisplay::floatToString(float number, int precision, char* string)
+{
+	uint tempInt = int(number);
+	int digitsBeforePoint = 0;
+	while(tempInt > 0)
+	{
+		digitsBeforePoint++;
+		tempInt /= 10;
+	}
+	dtostrf(number,(digitsBeforePoint+1+precision), precision, string);
 }
 
 // function to show color spectrum
