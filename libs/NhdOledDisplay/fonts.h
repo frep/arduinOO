@@ -8,6 +8,8 @@
 #ifndef FONTS_H_
 #define FONTS_H_
 
+#define CHAR_HEIGHT 8
+#define CHAR_WIDTH 5
 
 /*********************************/
 /******** FONT TABLE 5x8 *********/

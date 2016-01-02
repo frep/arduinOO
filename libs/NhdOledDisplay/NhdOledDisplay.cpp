@@ -10,6 +10,7 @@
 
 #include <fonts.h>
 
+
 NhdOledDisplay::NhdOledDisplay(unsigned int displayWidth,
 	                           unsigned int displayHeight,
 							   uint8_t SDI,
@@ -284,6 +285,17 @@ void NhdOledDisplay::printImage(unsigned char x_pos, unsigned char y_pos, const 
     }
 }
 
+void NhdOledDisplay::drawButton(unsigned char x_pos, unsigned char y_pos, uint width, uint height, const char text[], unsigned long textColor, unsigned long buttonColor)
+{
+	uint buttonHeight = height;
+	if(height < CHAR_HEIGHT+2)
+	{
+		buttonHeight = CHAR_HEIGHT+2;
+	}
+	drawRectange(x_pos, y_pos, width, buttonHeight, buttonColor);
+	printTextCentered((y_pos+(buttonHeight-CHAR_HEIGHT)/2), (x_pos+(width/2)), text, textColor, buttonColor);
+}
+
 void NhdOledDisplay::printText(unsigned char x_pos, unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor)
 {
 	for(uint i=0;i<strlen(text);i++)
@@ -294,20 +306,17 @@ void NhdOledDisplay::printText(unsigned char x_pos, unsigned char y_pos, const c
 
 void NhdOledDisplay::printTextCentered(unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor)
 {
+	printTextCentered(y_pos, (width/2), text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printTextCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor)
+{
 	unsigned char x_pos = 0;
-	uint numOfChars = strlen(text) - 1;
-	uint numOfSpaces = 0;
-	if(numOfChars > 1)
-	{
-		numOfSpaces = numOfChars - 1;
-	}
-	// each char is 5 pixel wide, each space 1 pixel
-	uint numOfPixel = numOfChars * 5 + numOfSpaces;
-	if(width - numOfPixel > 0)
-	{
-		x_pos = (width - numOfPixel) / 2;
-		x_pos -= 2;
-	}
+
+	uint numOfPixel = getTextPixels(text, 5, 1);
+
+	x_pos = center - numOfPixel / 2;
+	x_pos -= 2;
 
 	printText(x_pos, y_pos, text, textColor, backgroundColor);
 }
@@ -322,23 +331,61 @@ void NhdOledDisplay::printText2x(unsigned char x_pos, unsigned char y_pos, const
 
 void NhdOledDisplay::printText2xCentered(unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor)
 {
+	printText2xCentered(y_pos, (width/2), text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printText2xCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor)
+{
 	unsigned char x_pos = 0;
-	uint numOfChars = strlen(text) - 1;
-	uint numOfSpaces = 0;
-	if(numOfChars > 1)
-	{
-		numOfSpaces = numOfChars - 1;
-	}
-	// each char is 10 pixel wide, each space 2 pixel
-	uint numOfPixel = numOfChars * 10 + numOfSpaces * 2;
-	if(width - numOfPixel > 0)
-	{
-		x_pos = (width - numOfPixel) / 2;
-		x_pos -= 5;
-	}
+
+	uint numOfPixel = getTextPixels(text, 10, 2);
+
+	x_pos = center - numOfPixel / 2;
+	x_pos -= 5;
 
 	printText2x(x_pos, y_pos, text, textColor, backgroundColor);
+}
 
+void NhdOledDisplay::printInt(unsigned char x_pos, unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	sprintf(text, "%d", number);
+	printText(x_pos, y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printIntCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	sprintf(text, "%d", number);
+	printTextCentered(y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printIntCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	sprintf(text, "%d", number);
+	printTextCentered(y_pos, center, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printInt2x(unsigned char x_pos, unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	sprintf(text, "%d", number);
+	printText2x(x_pos, y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printInt2xCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	sprintf(text, "%d", number);
+	printText2xCentered(y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printInt2xCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor)
+{
+	char text[] = "";
+	sprintf(text, "%d", number);
+	printText2xCentered(y_pos, center, text, textColor, backgroundColor);
 }
 
 void NhdOledDisplay::drawHLine(unsigned char x_pos_start, unsigned char x_pos_stop, unsigned char y_pos, unsigned long color)
@@ -393,6 +440,14 @@ void NhdOledDisplay::drawVLine(unsigned char x_pos, unsigned char y_pos_start, u
 	}
 }
 
+void NhdOledDisplay::drawRectange(unsigned char x_pos, unsigned char y_pos, uint width, uint height, unsigned long color)
+{
+	for(uint i=y_pos;i<(y_pos+height);i++)
+	{
+		drawHLine(x_pos, (x_pos+width), i, color);
+	}
+}
+
 unsigned int NhdOledDisplay::getWidth()
 {
 	return width;
@@ -410,11 +465,11 @@ void NhdOledDisplay::OLED_Text_160128RGB(unsigned char x_pos, unsigned char y_po
     int count;
     unsigned char mask = 0x80;
 
-    for(i=0;i<8;i++)     // each character is 8 pixels tall
+    for(i=0;i<CHAR_HEIGHT;i++)     // each character is 8 pixels tall
     {
         OLED_SetPosition_160128RGB(x_pos,y_pos);
         OLED_WriteMemoryStart_160128RGB();
-        for (count=0;count<5;count++)    // each character is 5 pixels wide
+        for (count=0;count<CHAR_WIDTH;count++)    // each character is 5 pixels wide
         {
             if((Ascii_1[letter][count] & mask) == mask)
                 OLED_Pixel_160128RGB(textColor);
@@ -433,11 +488,11 @@ void NhdOledDisplay::OLED_Text2x_160128RGB(unsigned char x_pos, unsigned char y_
     int count;
     unsigned char mask = 0x80;
 
-    for(i=1;i<=16;i++)     // each character is 16 pixels tall
+    for(i=1;i<=(CHAR_HEIGHT*2);i++)     // each character is 16 pixels tall
     {
         OLED_SetPosition_160128RGB(x_pos,y_pos);
         OLED_WriteMemoryStart_160128RGB();
-        for (count=0;count<10;count++)    // each character is 10 pixels wide
+        for (count=0;count<(CHAR_WIDTH*2);count++)    // each character is 10 pixels wide
         {
             if((Ascii_1[letter][(count/2)] & mask) == mask)
                 OLED_Pixel_160128RGB(textColor);
@@ -450,6 +505,17 @@ void NhdOledDisplay::OLED_Text2x_160128RGB(unsigned char x_pos, unsigned char y_
             mask = mask >> 1;
         }
     }
+}
+
+uint NhdOledDisplay::getTextPixels(const char text[], uint charWidth, uint spaceWidth)
+{
+	uint numOfChars = strlen(text) - 1;
+	uint numOfSpaces = 0;
+	if(numOfChars > 1)
+	{
+		numOfSpaces = numOfChars - 1;
+	}
+	return numOfChars * charWidth + numOfSpaces * spaceWidth;
 }
 
 // function to show color spectrum
@@ -543,7 +609,6 @@ void NhdOledDisplay::OLED_Spectrum_160128RGB(void)
 /*==== HIGH LEVEL FUNCTIONS =====*/
 /*============= END =============*/
 /*===============================*/
-
 
 
 

@@ -24,22 +24,45 @@ public:
 
 	void init();
 
-	// high level functions
+	//////////////////////////
+	// HIGH LEVEL FUNCTIONS //
+	//////////////////////////
+
+	// Images
 	void printImage(unsigned char x_pos, unsigned char y_pos, const unsigned char* image, int imageWidth, int imageHeight);
+
+	// Text
 	void printText(unsigned char x_pos, unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor);
 	void printTextCentered(unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor);
+	void printTextCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor);
 	void printText2x(unsigned char x_pos, unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor);
 	void printText2xCentered(unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor);
+	void printText2xCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor);
+
+	// Numbers
+	void printInt(unsigned char x_pos, unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
+	void printIntCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
+	void printIntCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor);
+	void printInt2x(unsigned char x_pos, unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
+	void printInt2xCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
+	void printInt2xCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor);
+
+	// Lines and figures
 	void drawHLine(unsigned char x_pos_start, unsigned char x_pos_stop, unsigned char y_pos, unsigned long color);
 	void drawVLine(unsigned char x_pos, unsigned char y_pos_start, unsigned char y_pos_stop, unsigned long color);
+	void drawRectange(unsigned char x_pos, unsigned char y_pos, uint width, uint height, unsigned long color);
+
 	void OLED_Spectrum_160128RGB(void);
 	void fillScreen(unsigned long color);
 
-	// getters
+	// Button
+	void drawButton(unsigned char x_pos, unsigned char y_pos, uint width, uint height, const char text[], unsigned long textColor, unsigned long buttonColor);
+
+	// Getters
 	unsigned int getWidth();
 	unsigned int getHeight();
 
-	// colors
+	// Colors
 	unsigned long RED;
 	unsigned long GREEN;
 	unsigned long BLUE;
@@ -61,7 +84,9 @@ private:
 	void pinConfiguration();
 	void OLED_Init_160128RGB(void);
 
-	// low level functions
+	/////////////////////////
+	// LOW LEVEL FUNCTIONS //
+	/////////////////////////
 	void OLED_Command_160128RGB(unsigned char c);
 	void OLED_Data_160128RGB(unsigned char d);
 	void OLED_SerialPixelData_160128RGB(unsigned char d);
@@ -73,6 +98,7 @@ private:
 
 	void OLED_Text_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
 	void OLED_Text2x_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
+	uint getTextPixels(const char text[], uint charWidth, uint spaceWidth);
 
 };
 
