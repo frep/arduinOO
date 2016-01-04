@@ -345,45 +345,45 @@ void NhdOledDisplay::printText2xCentered(unsigned char y_pos, unsigned char cent
 	printText2x(x_pos, y_pos, text, textColor, backgroundColor);
 }
 
-void NhdOledDisplay::printInt(unsigned char x_pos, unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor)
+void NhdOledDisplay::printInt(unsigned char x_pos, unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor)
 {
 	char text[] = "";
-	sprintf(text, "%d", number);
+	intToString(number, length, text);
 	printText(x_pos, y_pos, text, textColor, backgroundColor);
 }
 
-void NhdOledDisplay::printIntCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor)
+void NhdOledDisplay::printIntCentered(unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor)
 {
 	char text[] = "";
-	sprintf(text, "%d", number);
+	intToString(number, length, text);
 	printTextCentered(y_pos, text, textColor, backgroundColor);
 }
 
-void NhdOledDisplay::printIntCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor)
+void NhdOledDisplay::printIntCentered(unsigned char y_pos, unsigned char center, int number, int length, unsigned long textColor, unsigned long backgroundColor)
 {
 	char text[] = "";
-	sprintf(text, "%d", number);
+	intToString(number, length, text);
 	printTextCentered(y_pos, center, text, textColor, backgroundColor);
 }
 
-void NhdOledDisplay::printInt2x(unsigned char x_pos, unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor)
+void NhdOledDisplay::printInt2x(unsigned char x_pos, unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor)
 {
 	char text[] = "";
-	sprintf(text, "%d", number);
+	intToString(number, length, text);
 	printText2x(x_pos, y_pos, text, textColor, backgroundColor);
 }
 
-void NhdOledDisplay::printInt2xCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor)
+void NhdOledDisplay::printInt2xCentered(unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor)
 {
 	char text[] = "";
-	sprintf(text, "%d", number);
+	intToString(number, length, text);
 	printText2xCentered(y_pos, text, textColor, backgroundColor);
 }
 
-void NhdOledDisplay::printInt2xCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor)
+void NhdOledDisplay::printInt2xCentered(unsigned char y_pos, unsigned char center, int number, int length, unsigned long textColor, unsigned long backgroundColor)
 {
 	char text[] = "";
-	sprintf(text, "%d", number);
+	intToString(number, length, text);
 	printText2xCentered(y_pos, center, text, textColor, backgroundColor);
 }
 
@@ -569,6 +569,20 @@ void NhdOledDisplay::floatToString(float number, int precision, char* string)
 		tempInt /= 10;
 	}
 	dtostrf(number,(digitsBeforePoint+1+precision), precision, string);
+}
+
+void NhdOledDisplay::intToString(int number, int length, char* string)
+{
+	int temp = number;
+	if(length == 0)
+	{
+		while(temp > 0)
+		{
+			length++;
+			temp /= 10;
+		}
+	}
+	dtostrf(number,length, 0, string);
 }
 
 // function to show color spectrum

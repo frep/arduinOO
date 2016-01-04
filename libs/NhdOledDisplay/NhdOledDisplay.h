@@ -40,12 +40,12 @@ public:
 	void printText2xCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor);
 
 	// Numbers
-	void printInt(unsigned char x_pos, unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
-	void printIntCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
-	void printIntCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor);
-	void printInt2x(unsigned char x_pos, unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
-	void printInt2xCentered(unsigned char y_pos, int number, unsigned long textColor, unsigned long backgroundColor);
-	void printInt2xCentered(unsigned char y_pos, unsigned char center, int number, unsigned long textColor, unsigned long backgroundColor);
+	void printInt(unsigned char x_pos, unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor);
+	void printIntCentered(unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor);
+	void printIntCentered(unsigned char y_pos, unsigned char center, int number, int length, unsigned long textColor, unsigned long backgroundColor);
+	void printInt2x(unsigned char x_pos, unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor);
+	void printInt2xCentered(unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor);
+	void printInt2xCentered(unsigned char y_pos, unsigned char center, int number, int length, unsigned long textColor, unsigned long backgroundColor);
 
 	void printFloat(unsigned char x_pos, unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor);
 	void printFloatCentered(unsigned char y_pos, float number, int precision, unsigned long textColor, unsigned long backgroundColor);
@@ -107,6 +107,7 @@ private:
 	void OLED_Text2x_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
 	uint getTextPixels(const char text[], uint charWidth, uint spaceWidth);
 	void floatToString(float number, int precision, char* string);
+	void intToString(int number, int length, char* string);
 
 };
 
