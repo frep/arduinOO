@@ -16,8 +16,7 @@ NhdOledDisplay::NhdOledDisplay(unsigned int displayWidth,
 	       	   	   	   	   	   uint8_t SCL,
 							   uint8_t RS,
 							   uint8_t RES,
-							   uint8_t CS,
-							   uint8_t PS)
+							   uint8_t CS)
 : width(displayWidth)
 , height(displayHeight)
 , SDI_PIN(SDI)
@@ -25,7 +24,6 @@ NhdOledDisplay::NhdOledDisplay(unsigned int displayWidth,
 , RS_PIN(RS)
 , RES_PIN(RES)
 , CS_PIN(CS)
-, PS_PIN(PS)
 {
 	RED    = 0x0000FF;
 	GREEN  = 0x00FF00;
@@ -51,11 +49,9 @@ void NhdOledDisplay::pinConfiguration()
     pinMode(RS_PIN,  OUTPUT);		// configure RS_PIN as output
     pinMode(RES_PIN, OUTPUT);       // configure RES_PIN as output
     pinMode(CS_PIN,  OUTPUT);       // configure CS_PIN as output
-    pinMode(PS_PIN,  OUTPUT);       // configure PS_PIN as output
     pinMode(SDI_PIN, OUTPUT);       // configure SDI_PIN as output
     pinMode(SCL_PIN, OUTPUT);       // configure SCL_PIN as output
     digitalWrite(CS_PIN, HIGH);     // set CS_PIN
-    digitalWrite(PS_PIN, LOW);      // reset PS_PIN
 }
 
 //OLED initialization

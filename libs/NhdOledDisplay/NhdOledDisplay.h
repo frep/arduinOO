@@ -18,8 +18,7 @@ public:
 			       uint8_t SCL,
 				   uint8_t RS,
 				   uint8_t RES,
-				   uint8_t CS,
-				   uint8_t PS);
+				   uint8_t CS);
 	virtual ~NhdOledDisplay();
 
 	void init();
@@ -62,6 +61,9 @@ public:
 	void OLED_Spectrum_160128RGB(void);
 	void fillScreen(unsigned long color);
 
+	void floatToString(float number, int precision, char* string);
+	void intToString(int number, int length, char* string);
+
 	// Button
 	void drawButton(unsigned char x_pos, unsigned char y_pos, uint width, uint height, const char text[], unsigned long textColor, unsigned long buttonColor);
 
@@ -86,7 +88,6 @@ private:
 	uint8_t RS_PIN;
 	uint8_t RES_PIN;
 	uint8_t CS_PIN;
-	uint8_t PS_PIN;
 
 	void pinConfiguration();
 	void OLED_Init_160128RGB(void);
@@ -106,8 +107,7 @@ private:
 	void OLED_Text_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
 	void OLED_Text2x_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
 	uint getTextPixels(const char text[], uint charWidth, uint spaceWidth);
-	void floatToString(float number, int precision, char* string);
-	void intToString(int number, int length, char* string);
+
 
 };
 
