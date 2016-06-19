@@ -13,6 +13,7 @@
 template<class T> class Node
 {
 public:
+	Node(): next(0), previous(0){};
 	Node(Node <T>* _next, T _data): next(_next), previous(0), data(_data){};
 	Node(Node <T>* _next, Node <T>* _previous, T _data): next(_next), previous(_previous), data(_data){};
 	Node(T _data): next(0), previous(0), data(_data){};
