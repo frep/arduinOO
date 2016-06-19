@@ -13,6 +13,7 @@
 
 template<class T> class ListIterator {
 public:
+  ListIterator():current(0), first(0){}
   ListIterator(Node<T>* begin):current(begin), first(begin){}
   virtual ~ListIterator(){}
 /*

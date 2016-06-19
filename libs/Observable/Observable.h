@@ -29,8 +29,8 @@ public:
    void notifyObservers() {
      ListIterator<Observer<T> *> iterator;
      iterator.set_begin(m_observers.begin());
-     while(iterator.hasNext()){
-       Observer<T>* obs = iterator.next();
+     while(!iterator.isDone()){
+       Observer<T>* obs = iterator.nextNode()->data;
        obs->update(static_cast<T *>(this));
      }
    }
