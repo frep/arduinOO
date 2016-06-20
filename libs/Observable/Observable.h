@@ -17,26 +17,35 @@
 
 template <class T> class Observer;
 
-template <class T> class Observable {
+template <class T> class Observable
+{
 public:
-  Observable(){}
-  virtual ~Observable(){}
+	Observable(){}
+	virtual ~Observable(){}
 
-  void addObserver(Observer<T> &observer){
-     m_observers.push_last(&observer);
-   }
+	void addObserver(Observer<T> &observer)
+	{
+		m_observers.push_last(&observer);
+	}
 
-   void notifyObservers() {
-     ListIterator<Observer<T> *> iterator;
-     iterator.set_begin(m_observers.begin());
-     while(!iterator.isDone()){
-       Observer<T>* obs = iterator.nextNode()->data;
-       obs->update(static_cast<T *>(this));
-     }
-   }
+	void removeObserver(Observer<T> &observer)
+	{
+		m_observers.remove_data(&observer);
+	}
+
+	void notifyObservers()
+	{
+		ListIterator<Observer<T> *> iterator;
+		iterator.set_begin(m_observers.begin());
+		while(iterator.hasNext())
+		{
+			Observer<T>* obs = iterator.nextNode()->data;
+			obs->update(static_cast<T *>(this));
+		}
+	}
 
 private:
-  LinkedList<Observer<T> *> m_observers;
+	LinkedList<Observer<T> *> m_observers;
 };
 
 

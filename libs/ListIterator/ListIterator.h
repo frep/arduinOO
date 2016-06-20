@@ -11,54 +11,47 @@
 #include "arduino.h"
 #include "Node.h"
 
-template<class T> class ListIterator {
+template<class T> class ListIterator
+{
 public:
-  ListIterator():current(0), first(0){}
-  ListIterator(Node<T>* begin):current(begin), first(begin){}
-  virtual ~ListIterator(){}
-/*
-  bool hasNext(){
-    return current->next == 0? false : true;
-  }
-*/
-  bool isDone(){
-	return current->next == 0 ? true : false;
-  }
+	ListIterator():_current(0), _first(0){}
+	ListIterator(Node<T>* begin):_current(begin), _first(begin){}
+	virtual ~ListIterator(){}
 
-  Node<T>* firstNode(){
-	  return first;
-  }
+	bool hasNext()
+	{
+		return _current->next == 0? false : true;
+	}
 
-  Node<T>* nextNode(){
-    current = current->next;
-    return current;
-  }
+	bool isDone()
+	{
+		return _current->next == 0 ? true : false;
+	}
 
-  Node<T>* currentNode(){
-	  return current;
-  }
+	Node<T>* firstNode()
+	{
+		return _first;
+	}
 
-  void set_begin(Node<T>* begin){
-    current = begin;
-  }
-/*
-  T next(){
-    Node<T>* temp = new Node<T>;
-    temp = current->next;
-    current = temp;
-    return current->data;
-  }
+	Node<T>* nextNode()
+	{
+		_current = _current->next;
+		return _current;
+	}
 
-  Node<T>* next_node(){
-    Node<T>* temp = new Node<T>;
-    temp = current->next;
-    current = temp;
-    return current;
-  }
-*/
+	Node<T>* currentNode()
+	{
+		return _current;
+	}
+
+	void set_begin(Node<T>* begin)
+	{
+		_current = begin;
+	}
+
 protected:
-  Node<T>* current;
-  Node<T>* first;
+	Node<T>* _current;
+	Node<T>* _first;
 };
 
 

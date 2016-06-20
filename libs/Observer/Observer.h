@@ -13,11 +13,12 @@
 
 template <class T> class Observable;
 
-template <class T>class Observer {
+template <class T>class Observer
+{
 public:
-  Observer() {}
-  virtual ~Observer() {}
-  virtual void update(T *observable) = 0;
+	Observer(){}
+	virtual ~Observer(){}
+	virtual void update(T *observable) = 0;
 };
 
 #endif /* OBSERVER_H_ */
