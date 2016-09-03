@@ -16,39 +16,86 @@ template<class T> class LinkedList
 {
 public:
 
-	LinkedList():_root(new Node<T>)
+	LinkedList()
 	{
-		_root->next = 0;
-		_root->previous = 0;
-		_last = _root;
-		nodeCount = 1;
+		first = 0;
+		last = 0;
+		nodeCount = 0;
 	}
 
-	virtual ~LinkedList() {}
-
-	//Method for Push some Data at the End of the list
-	void push_last(T data)
+	virtual ~LinkedList()
 	{
-	   Node<T>* temp = _last;
-	   _last = new Node<T>(0, data);
-	   temp->next = _last;
-	   _last->previous = temp;
-	   nodeCount++;
+		Node<T>* temp = first;
+		while(temp != 0)
+		{
+			temp = temp->next;
+			delete(first);
+			first = temp;
+		}
 	}
 
-	bool remove_data(T data)
+	bool isEmpty()
 	{
-		ListIterator<T>* riterator = new ListIterator<T>(_root);
+		if(last == 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	int size()
+	{
+		return nodeCount;
+	}
+
+	void insertAtBack(T valueToInsert)
+	{
+		Node<T>* newNode = new Node<T>(valueToInsert);
+		if(isEmpty())
+		{
+			first = newNode;
+			last = newNode;
+		}
+		else
+		{
+			last->next = newNode;
+			newNode->previous = last;
+			last = newNode;
+		}
+		nodeCount++;
+		Serial.print(" added Node Nr: ");
+		Serial.println(nodeCount);
+	}
+
+	bool removeFromBack()
+	{
+		if(isEmpty())
+		{
+			return false;
+		}
+		else
+		{
+			Node<T>* temp = last;
+			last = last->previous;
+			last->next = 0;
+			delete(temp);
+			return true;
+		}
+	}
+
+	bool remove(T valueToRemove)
+	{
+		ListIterator<T>* riterator = new ListIterator<T>(first);
 		while(true)
 		{
-			if(riterator->currentNode()->data == data)
+			if(riterator->currentData() == valueToRemove)
 			{
 				// node found -> remove it!
-				if(riterator->currentNode() == _root)
+				if(riterator->currentNode() == first)
 				{
 					remove_first();
 				}
-				else if(riterator->currentNode() == _last)
+				else if(riterator->currentNode() == last)
 				{
 					remove_last();
 				}
@@ -78,42 +125,35 @@ public:
 
 	void remove_last()
 	{
-		Node<T>* temp = _last;
-		_last = _last->previous;
-		_last->next = 0;
+		Node<T>* temp = last;
+		last = last->previous;
+		last->next = 0;
 		delete temp;
 		nodeCount--;
 	}
 
 	void remove_first()
 	{
-		Node<T>* temp = _root;
-		_root = _root->next;
-		_root->previous = 0;
+		Node<T>* temp = first;
+		first = first->next;
+		first->previous = 0;
 		delete temp;
 		nodeCount--;
 	}
 
-	int get_list_size()
+	Node<T>* firstNode()
 	{
-		return nodeCount;
+		return first;
 	}
 
-    //Get the First Node;
-    Node<T>* begin()
+	Node<T>* lastNode()
 	{
-    	return _root;
+		return last;
 	}
-
-    //Get the Last Node;
-    Node<T>* last()
-    {
-    	return _last;
-    }
 
 protected:
-    Node<T>* _root;
-    Node<T>* _last;
+    Node<T>* first;
+    Node<T>* last;
     int nodeCount;
 };
 

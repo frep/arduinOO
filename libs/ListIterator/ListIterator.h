@@ -49,6 +49,11 @@ public:
 		_current = begin;
 	}
 
+	T currentData()
+	{
+		return _current->data;
+	}
+
 protected:
 	Node<T>* _current;
 	Node<T>* _first;

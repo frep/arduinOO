@@ -25,23 +25,31 @@ public:
 
 	void addObserver(Observer<T> &observer)
 	{
-		m_observers.push_last(&observer);
+		m_observers.insertAtBack(&observer);
 	}
 
 	void removeObserver(Observer<T> &observer)
 	{
-		m_observers.remove_data(&observer);
+		m_observers.remove(&observer);
 	}
 
 	void notifyObservers()
 	{
 		ListIterator<Observer<T> *> iterator;
-		iterator.set_begin(m_observers.begin());
-		while(iterator.hasNext())
+		iterator.set_begin(m_observers.firstNode());
+
+		if(!m_observers.isEmpty())
 		{
-			Observer<T>* obs = iterator.nextNode()->data;
+			Observer<T>* obs = iterator.currentData();
 			obs->update(static_cast<T *>(this));
+			if(iterator.hasNext())
+			{
+				iterator.nextNode();
+				Observer<T>* obs = iterator.currentData();
+				obs->update(static_cast<T *>(this));
+			}
 		}
+
 	}
 
 private:
