@@ -26,5 +26,5 @@ boolean DigitalInput::read()
 
 void DigitalInput::write(boolean value)
 {
-	digitalWrite(pinNr, value);
+	value ? pinMode(pinNr, INPUT_PULLUP) : pinMode(pinNr, INPUT);
 }

@@ -9,9 +9,11 @@
 #define BUTTON_H_
 
 #include "Arduino.h"
+#include <DigitalPin.h>
 
 class Button {
 public:
+	Button();
 	Button(int pinNr, boolean logicLevel);
 	virtual ~Button();
 	void init();
@@ -22,9 +24,10 @@ public:
 	virtual void buttonPressed();
 	virtual void buttonReleased();
 
-private:
+protected:
 
-	int pin;
+	//int pin;
+	DigitalPin* pin;
 	boolean isActiveLow;
 	boolean state;
 };

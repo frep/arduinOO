@@ -7,10 +7,14 @@
 
 #include "Button.h"
 #include "Arduino.h"
+#include <DigitalInput.h>
+
+  Button::Button(){}
 
   Button::Button(int pinNr, boolean logicLevel)
-  : pin(pinNr), isActiveLow(logicLevel)
+  : isActiveLow(logicLevel)
   {
+	pin = new DigitalInput(pinNr);
     state = getValue();
   }
 
@@ -21,17 +25,18 @@
 
   void Button::init()
   {
-    pinMode(pin, INPUT);
+    pin->init();
   }
 
   void Button::initWithInternalPullup()
   {
-    pinMode(pin, INPUT_PULLUP);
+    pin->init();
+    pin->write(true);
   }
 
   boolean Button::getValue()
   {
-    return digitalRead(pin);
+    return pin->read();
   }
 
   void Button::checkButton()
