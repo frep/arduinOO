@@ -13,20 +13,19 @@
 
 class Button {
 public:
-	Button();
 	Button(int pinNr, boolean logicLevel);
 	virtual ~Button();
 	void init();
 	void initWithInternalPullup();
 
 	boolean getValue();
+	void setValue(boolean value);
 	void checkButton();
 	virtual void buttonPressed();
 	virtual void buttonReleased();
 
 protected:
 
-	//int pin;
 	DigitalPin* pin;
 	boolean isActiveLow;
 	boolean state;

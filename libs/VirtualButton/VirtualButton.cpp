@@ -9,14 +9,12 @@
 #include "VirtualDigitalInput.h"
 
 VirtualButton::VirtualButton(boolean logicLevel)
+: Button(0, logicLevel)
 {
 	pin = new VirtualDigitalInput();
-	isActiveLow = logicLevel;
 }
 
-VirtualButton::~VirtualButton() {
-	// TODO Auto-generated destructor stub
-}
+VirtualButton::~VirtualButton() {}
 
 void VirtualButton::write(boolean value)
 {

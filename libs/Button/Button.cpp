@@ -9,8 +9,6 @@
 #include "Arduino.h"
 #include <DigitalInput.h>
 
-  Button::Button(){}
-
   Button::Button(int pinNr, boolean logicLevel)
   : isActiveLow(logicLevel)
   {
@@ -37,6 +35,11 @@
   boolean Button::getValue()
   {
     return pin->read();
+  }
+
+  void Button::setValue(boolean value)
+  {
+	  pin->write(value);
   }
 
   void Button::checkButton()
