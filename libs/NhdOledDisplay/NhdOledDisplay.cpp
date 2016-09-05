@@ -299,12 +299,37 @@ void NhdOledDisplay::printText(unsigned char x_pos, unsigned char y_pos, const c
 	}
 }
 
+void NhdOledDisplay::printText(unsigned char x_pos, unsigned char y_pos, String text, unsigned long textColor, unsigned long backgroundColor)
+{
+	for(uint i=0;i<text.length();i++)
+	{
+		OLED_Text_160128RGB(x_pos+(i*6), y_pos, text.charAt(i), textColor, backgroundColor);
+	}
+}
+
 void NhdOledDisplay::printTextCentered(unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor)
 {
 	printTextCentered(y_pos, (width/2), text, textColor, backgroundColor);
 }
 
+void NhdOledDisplay::printTextCentered(unsigned char y_pos, String text, unsigned long textColor, unsigned long backgroundColor)
+{
+	printTextCentered(y_pos, (width/2), text, textColor, backgroundColor);
+}
+
 void NhdOledDisplay::printTextCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor)
+{
+	unsigned char x_pos = 0;
+
+	uint numOfPixel = getTextPixels(text, 5, 1);
+
+	x_pos = center - numOfPixel / 2;
+	x_pos -= 2;
+
+	printText(x_pos, y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printTextCentered(unsigned char y_pos, unsigned char center, String text, unsigned long textColor, unsigned long backgroundColor)
 {
 	unsigned char x_pos = 0;
 
@@ -324,12 +349,37 @@ void NhdOledDisplay::printText2x(unsigned char x_pos, unsigned char y_pos, const
 	}
 }
 
+void NhdOledDisplay::printText2x(unsigned char x_pos, unsigned char y_pos, String text, unsigned long textColor, unsigned long backgroundColor)
+{
+	for(uint i=0;i<text.length();i++)
+	{
+		OLED_Text2x_160128RGB(x_pos+(i*12), y_pos, text.charAt(i), textColor, backgroundColor);
+	}
+}
+
 void NhdOledDisplay::printText2xCentered(unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor)
 {
 	printText2xCentered(y_pos, (width/2), text, textColor, backgroundColor);
 }
 
+void NhdOledDisplay::printText2xCentered(unsigned char y_pos, String text, unsigned long textColor, unsigned long backgroundColor)
+{
+	printText2xCentered(y_pos, (width/2), text, textColor, backgroundColor);
+}
+
 void NhdOledDisplay::printText2xCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor)
+{
+	unsigned char x_pos = 0;
+
+	uint numOfPixel = getTextPixels(text, 10, 2);
+
+	x_pos = center - numOfPixel / 2;
+	x_pos -= 5;
+
+	printText2x(x_pos, y_pos, text, textColor, backgroundColor);
+}
+
+void NhdOledDisplay::printText2xCentered(unsigned char y_pos, unsigned char center, String text, unsigned long textColor, unsigned long backgroundColor)
 {
 	unsigned char x_pos = 0;
 
@@ -547,6 +597,17 @@ void NhdOledDisplay::OLED_Text2x_160128RGB(unsigned char x_pos, unsigned char y_
 uint NhdOledDisplay::getTextPixels(const char text[], uint charWidth, uint spaceWidth)
 {
 	uint numOfChars = strlen(text) - 1;
+	uint numOfSpaces = 0;
+	if(numOfChars > 1)
+	{
+		numOfSpaces = numOfChars - 1;
+	}
+	return numOfChars * charWidth + numOfSpaces * spaceWidth;
+}
+
+uint NhdOledDisplay::getTextPixels(String text, uint charWidth, uint spaceWidth)
+{
+	uint numOfChars = text.length();
 	uint numOfSpaces = 0;
 	if(numOfChars > 1)
 	{

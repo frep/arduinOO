@@ -32,11 +32,17 @@ public:
 
 	// Text
 	void printText(unsigned char x_pos, unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor);
+	void printText(unsigned char x_pos, unsigned char y_pos, String text, unsigned long textColor, unsigned long backgroundColor);
 	void printTextCentered(unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor);
+	void printTextCentered(unsigned char y_pos, String text, unsigned long textColor, unsigned long backgroundColor);
 	void printTextCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor);
+	void printTextCentered(unsigned char y_pos, unsigned char center, String text, unsigned long textColor, unsigned long backgroundColor);
 	void printText2x(unsigned char x_pos, unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor);
+	void printText2x(unsigned char x_pos, unsigned char y_pos, String text, unsigned long textColor, unsigned long backgroundColor);
 	void printText2xCentered(unsigned char y_pos, const char text[], unsigned long textColor, unsigned long backgroundColor);
+	void printText2xCentered(unsigned char y_pos, String text, unsigned long textColor, unsigned long backgroundColor);
 	void printText2xCentered(unsigned char y_pos, unsigned char center, const char text[], unsigned long textColor, unsigned long backgroundColor);
+	void printText2xCentered(unsigned char y_pos, unsigned char center, String text, unsigned long textColor, unsigned long backgroundColor);
 
 	// Numbers
 	void printInt(unsigned char x_pos, unsigned char y_pos, int number, int length, unsigned long textColor, unsigned long backgroundColor);
@@ -107,6 +113,7 @@ private:
 	void OLED_Text_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
 	void OLED_Text2x_160128RGB(unsigned char x_pos, unsigned char y_pos, unsigned char letter, unsigned long textColor, unsigned long backgroundColor);
 	uint getTextPixels(const char text[], uint charWidth, uint spaceWidth);
+	uint getTextPixels(String text, uint charWidth, uint spaceWidth);
 
 
 };
