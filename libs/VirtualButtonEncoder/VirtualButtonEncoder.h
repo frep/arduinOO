@@ -9,14 +9,41 @@
 #define VIRTUALBUTTONENCODER_H_
 
 #include <ButtonEncoder.h>
+#include <VirtualDigitalInput.h>
+#include <VirtualButton.h>
 
-class VirtualButtonEncoder: public ButtonEncoder {
+template<class T>
+class VirtualButtonEncoder: public ButtonEncoder<T> {
 public:
-	VirtualButtonEncoder();
-	virtual ~VirtualButtonEncoder();
-	void setChA(boolean value);
-	void setChB(boolean value);
-	void setBut(boolean value);
+	VirtualButtonEncoder()
+	: ButtonEncoder<T>(0, 0, 0)
+	{
+		ButtonEncoder<T>::chaPin = new VirtualDigitalInput();
+		ButtonEncoder<T>::chbPin = new VirtualDigitalInput();
+		ButtonEncoder<T>::butPin = new VirtualButton<T>(true);
+	}
+
+	virtual ~VirtualButtonEncoder()
+	{
+		delete ButtonEncoder<T>::chaPin;
+		delete ButtonEncoder<T>::chbPin;
+		delete ButtonEncoder<T>::butPin;
+	}
+
+	void setChA(boolean value)
+	{
+		ButtonEncoder<T>::chaPin->write(value);
+	}
+
+	void setChB(boolean value)
+	{
+		ButtonEncoder<T>::chbPin->write(value);
+	}
+
+	void setBut(boolean value)
+	{
+		ButtonEncoder<T>::butPin->setValue(value);
+	}
 };
 
 #endif /* VIRTUALBUTTONENCODER_H_ */

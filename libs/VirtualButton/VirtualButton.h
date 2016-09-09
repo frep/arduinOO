@@ -9,12 +9,27 @@
 #define VIRTUALBUTTON_H_
 
 #include <Button.h>
+#include "VirtualDigitalInput.h"
 
-class VirtualButton: public Button {
+template<class T>
+class VirtualButton: public Button<T>
+{
 public:
-	VirtualButton(boolean logicLevel);
-	virtual ~VirtualButton();
-	void write(boolean value);
+	VirtualButton(boolean logicLevel)
+	: Button<T>(0, logicLevel)
+	{
+		Button<T>::pin = new VirtualDigitalInput();
+	}
+
+	virtual ~VirtualButton()
+	{
+		delete Button<T>::pin;
+	}
+
+	void write(boolean value)
+	{
+		Button<T>::pin->write(value);
+	}
 };
 
 #endif /* VIRTUALBUTTON_H_ */
