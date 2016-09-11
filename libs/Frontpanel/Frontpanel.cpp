@@ -19,6 +19,10 @@ Frontpanel::Frontpanel()
 	butSE   = new VirtualButton<Frontpanel>(activeLow);
 	encV    = new VirtualButtonEncoder<Frontpanel>();
 	encA    = new VirtualButtonEncoder<Frontpanel>();
+
+	// Statemachine
+	currentState = NULL;
+	stateDefault = new StateDefault(this);
 }
 
 Frontpanel::~Frontpanel()
@@ -31,17 +35,23 @@ Frontpanel::~Frontpanel()
 	delete butSE;
 	delete encV;
 	delete encA;
+	delete stateDefault;
 }
 
 void Frontpanel::setup()
 {
+	EEPROM.begin(512);
+	Serial.begin(115200);
+	while(!Serial){}
+	readConfig();
 	setupButtons();
 	setupGpioExpander();
 	setupEncoders();
 	setupDisplay();
-	Serial.begin(115200);
-	while(!Serial){}
+	setCurrentState(stateDefault);
 	Serial.println("init done!");
+	printMemoryInfo();
+	printSketchInfos();
 }
 
 void Frontpanel::loop()
@@ -167,48 +177,110 @@ void Frontpanel::decCurrent()
 	}
 }
 
+void Frontpanel::writeConfig()
+{
+	Serial.println("Writing Config");
+	EEPROM_write(0,'C');
+	EEPROM_write(1,'F');
+	EEPROM_write(2,'G');
+
+	EEPROM_write(16,startVoltage);	// Voltage [V]  (4 Bytes)
+	EEPROM_write(20,startCurrent);	// Current [mA] (4 Bytes)
+
+	EEPROM.commit();
+}
+
+boolean Frontpanel::readConfig()
+{
+	Serial.println("Reading Configuration");
+	if( EEPROM_check(0,'C') && EEPROM_check(1,'F') && EEPROM_check(2,'G') )
+	{
+		Serial.println("Configurarion Found!");
+		EEPROM_read(16,startVoltage);
+		EEPROM_read(20,startCurrent);
+		return true;
+	}
+	else
+	{
+		Serial.println("Configurarion NOT FOUND!!!!");
+		return false;
+	}
+}
+
 void Frontpanel::butNWpressed()
 {
-	Serial.println("button NW pressed");
+	currentState->butNWpressed();
 }
 
 void Frontpanel::butNEpressed()
 {
-	Serial.println("button NE pressed");
+	currentState->butNEpressed();
 }
 
 void Frontpanel::butSWpressed()
 {
-	Serial.println("button SW pressed");
+	currentState->butSWpressed();
 }
 
 void Frontpanel::butSEpressed()
 {
-	Serial.println("button SE pressed");
+	currentState->butSEpressed();
 }
 
 void Frontpanel::encVpressed()
 {
-	Serial.println("button encV pressed");
+	currentState->encVpressed();
 }
 
 void Frontpanel::encApressed()
 {
-	Serial.println("button encA pressed");
+	currentState->encApressed();
+}
+
+void Frontpanel::encVcwTurn()
+{
+	currentState->encVcwTurn();
+}
+
+void Frontpanel::encVccwTurn()
+{
+	currentState->encVccwTurn();
+}
+
+void Frontpanel::encAcwTurn()
+{
+	currentState->encAcwTurn();
+}
+
+void Frontpanel::encAccwTurn()
+{
+	currentState->encAccwTurn();
+}
+
+void Frontpanel::setCurrentState(FrontpanelState* newState)
+{
+	currentState = newState;
+	// update display
+	currentState->showDisplay();
+}
+
+FrontpanelState* Frontpanel::getStateDefault()
+{
+	return stateDefault;
 }
 
 void Frontpanel::setupEncoders()
 {
 	// "Voltage"-Encoder
 	encV->init();
-	encV->attachFunctionOnCWTurn(this,  &Frontpanel::incVoltage);
-	encV->attachFunctionOnCCWTurn(this, &Frontpanel::decVoltage);
+	encV->attachFunctionOnCWTurn(this,                &Frontpanel::encVcwTurn);
+	encV->attachFunctionOnCCWTurn(this,               &Frontpanel::encVccwTurn);
 	encV->butPin->attachFunctionOnButtonPressed(this, &Frontpanel::encVpressed);
 
 	// "Current"-Encoder
 	encA->init();
-	encA->attachFunctionOnCWTurn(this,  &Frontpanel::incCurrent);
-	encA->attachFunctionOnCCWTurn(this, &Frontpanel::decCurrent);
+	encA->attachFunctionOnCWTurn(this,                &Frontpanel::encAcwTurn);
+	encA->attachFunctionOnCCWTurn(this,               &Frontpanel::encAccwTurn);
 	encA->butPin->attachFunctionOnButtonPressed(this, &Frontpanel::encApressed);
 }
 
@@ -266,22 +338,4 @@ void Frontpanel::setupDisplay()
 	display->printText2xCentered( 83, "bench PSU", display->BLACK, display->YELLOW);
 
 	delay(2000);
-
-	display->fillScreen(display->BLACK);
-
-	display->drawButton(10,   0, 60, 20, "Lipo 1s",  display->BLACK, display->YELLOW);
-	display->drawButton(90,   0, 60, 20, "Load",     display->BLACK, display->YELLOW);
-	display->drawButton(10, 108, 60, 20, "Settings", display->BLACK, display->YELLOW);
-	display->drawButton(90, 108, 60, 20, "Save",     display->BLACK, display->YELLOW);
-
-	float fakeVoltage = 5.16;	// Voltage
-	int fakeCurrent = 5;		// Milliamps
-	display->printFloat2xCentered(56,  40, fakeVoltage, 1, display->GREEN, display->BLACK);
-	display->printInt2xCentered(  56, 120, fakeCurrent, 4, display->GREEN, display->BLACK);
-
-	printSetVoltage();
-	printSetCurrent();
-
-	display->printTextCentered(35,  40, "Volts",     display->GREEN, display->BLACK);
-	display->printTextCentered(35, 120, "Milliamps", display->GREEN, display->BLACK);
 }
