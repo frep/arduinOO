@@ -15,6 +15,7 @@
 #include <VirtualButtonEncoder.h>
 #include "Adafruit_MCP23017.h"
 #include <EEPROM.h>
+#include <AD5274.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // DISPLAY DEFINES
@@ -79,6 +80,7 @@
 // AD5274  DEFINES
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #define AD5274_address 0x2C
+#define MAX_RES 20000
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // FRONTPANEL CLASS
@@ -105,12 +107,14 @@ private:
 	VirtualButton<Frontpanel>*  		butSE;
 	VirtualButtonEncoder<Frontpanel>*	encV;
 	VirtualButtonEncoder<Frontpanel>* 	encA;
+	AD5274*                             digPot;
 
 	// setup functions
 	void setupGpioExpander();
 	void setupDisplay();
 	void setupButtons();
 	void setupEncoders();
+	void setupDigPot();
 
 	// loop functions
 	void checkExpanderPins();
@@ -127,8 +131,10 @@ private:
 	void incCurrent();
 	void decCurrent();
 
+	uint16_t digPotValue4loadCurrent(uint16_t milliamp);
+
 	// EEPROM-based configurations
-	void writeConfig();
+	void    writeConfig();
 	boolean readConfig();
 
 	// ---------------------------------------------------------------
@@ -163,6 +169,7 @@ private:
 	float		maxVoltage;
 	uint16_t	startCurrent;
 	uint16_t	maxCurrent;
+	uint16_t    loadCurrent;
 
 };
 
@@ -229,6 +236,15 @@ public:
 	StateDefault(Frontpanel* context)
 	: FrontpanelState(context)
 	{}
+	void butNEpressed()
+	{
+		context->digPot->setRDAC(255);
+	}
+	void butSEpressed()
+	{
+		Serial.print("Return value: ");
+		Serial.println(context->digPot->getRDAC());
+	}
 	void encVpressed()
 	{
 		context->writeConfig();

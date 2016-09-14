@@ -9,7 +9,7 @@
 #include "frep.h"
 
 Frontpanel::Frontpanel()
-: lastReg(0), startVoltage(5.1), maxVoltage(30.0), startCurrent(500), maxCurrent(2000)
+: lastReg(0), startVoltage(5.1), maxVoltage(30.0), startCurrent(500), maxCurrent(2000), loadCurrent(1000)
 {
 	display = new NhdOledDisplay(160, 128, SDI_PIN, SCL_PIN, RS_PIN, RES_PIN, CS_PIN);
 	mcp     = new Adafruit_MCP23017();
@@ -19,6 +19,7 @@ Frontpanel::Frontpanel()
 	butSE   = new VirtualButton<Frontpanel>(activeLow);
 	encV    = new VirtualButtonEncoder<Frontpanel>();
 	encA    = new VirtualButtonEncoder<Frontpanel>();
+	digPot  = new AD5274(AD5274_address, MAX_RES);
 
 	// Statemachine
 	currentState = NULL;
@@ -36,17 +37,20 @@ Frontpanel::~Frontpanel()
 	delete encV;
 	delete encA;
 	delete stateDefault;
+	delete digPot;
 }
 
 void Frontpanel::setup()
 {
 	EEPROM.begin(512);
 	Serial.begin(115200);
+	Wire.begin();
 	while(!Serial){}
 	readConfig();
 	setupButtons();
 	setupGpioExpander();
 	setupEncoders();
+	setupDigPot();
 	setupDisplay();
 	setCurrentState(stateDefault);
 	Serial.println("init done!");
@@ -177,6 +181,20 @@ void Frontpanel::decCurrent()
 	}
 }
 
+uint16_t Frontpanel::digPotValue4loadCurrent(uint16_t milliamp)
+{
+	if(milliamp >1000)
+	{
+		milliamp = 1000;
+	}
+	uint16_t returnValue = ((1000000 / milliamp) - 1000);
+	Serial.print("load current: ");
+	Serial.print(milliamp);
+	Serial.print("mA corresponds to R = ");
+	Serial.println(returnValue);
+	return returnValue;
+}
+
 void Frontpanel::writeConfig()
 {
 	Serial.println("Writing Config");
@@ -184,8 +202,9 @@ void Frontpanel::writeConfig()
 	EEPROM_write(1,'F');
 	EEPROM_write(2,'G');
 
-	EEPROM_write(16,startVoltage);	// Voltage [V]  (4 Bytes)
-	EEPROM_write(20,startCurrent);	// Current [mA] (4 Bytes)
+	EEPROM_write(16,startVoltage);	// Voltage [V]
+	EEPROM_write(20,startCurrent);	// Current [mA]
+	EEPROM_write(24,loadCurrent);	// Current [mA]
 
 	EEPROM.commit();
 }
@@ -195,14 +214,15 @@ boolean Frontpanel::readConfig()
 	Serial.println("Reading Configuration");
 	if( EEPROM_check(0,'C') && EEPROM_check(1,'F') && EEPROM_check(2,'G') )
 	{
-		Serial.println("Configurarion Found!");
+		Serial.println("Configuration Found!");
 		EEPROM_read(16,startVoltage);
 		EEPROM_read(20,startCurrent);
+		EEPROM_read(24, loadCurrent);
 		return true;
 	}
 	else
 	{
-		Serial.println("Configurarion NOT FOUND!!!!");
+		Serial.println("Configuration NOT FOUND!!!!");
 		return false;
 	}
 }
@@ -282,6 +302,12 @@ void Frontpanel::setupEncoders()
 	encA->attachFunctionOnCWTurn(this,                &Frontpanel::encAcwTurn);
 	encA->attachFunctionOnCCWTurn(this,               &Frontpanel::encAccwTurn);
 	encA->butPin->attachFunctionOnButtonPressed(this, &Frontpanel::encApressed);
+}
+
+void Frontpanel::setupDigPot()
+{
+	digPot->init();
+	digPot->setResistor(digPotValue4loadCurrent(loadCurrent));
 }
 
 void Frontpanel::setupButtons()
