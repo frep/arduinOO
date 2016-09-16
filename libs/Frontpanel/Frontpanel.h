@@ -83,12 +83,18 @@
 #define MAX_RES 20000
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
+// LOAD CURRENT
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#define numberLoadCurValues 39
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 // FRONTPANEL CLASS
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 // forward declarations
 class FrontpanelState;
 class StateDefault;
+class StateLoadCurrent;
 
 class Frontpanel: public ArduinoSketch, public EspChip
 {
@@ -154,22 +160,31 @@ private:
 
 	void showDisplay();
 
-	FrontpanelState* currentState;
-	friend           StateDefault;
-	StateDefault*    stateDefault;
-	void             setCurrentState(FrontpanelState* newState);
-	FrontpanelState* getStateDefault();
+	FrontpanelState*    currentState;
+	friend              StateDefault;
+	friend              StateLoadCurrent;
+	StateDefault*       stateDefault;
+	StateLoadCurrent*	stateLoadCurrent;
+	void                setCurrentState(FrontpanelState* newState);
+	FrontpanelState*    getStateDefault();
+	FrontpanelState*    getStateLoadCurrent();
 
 
 	// ---------------------------------------------------------------
 
-	// attributes
 	uint16_t	lastReg;
+
 	float 		startVoltage;
 	float		maxVoltage;
+
 	uint16_t	startCurrent;
 	uint16_t	maxCurrent;
-	uint16_t    loadCurrent;
+
+	uint8_t     loadCurrentIndex;
+	uint8_t     getPrevLoadCurrentIndex();
+	uint8_t     getNextLoadCurrentIndex();
+	void        printLoadCurrents();
+	uint16_t    loadCurrents[numberLoadCurValues];
 
 };
 
@@ -230,6 +245,8 @@ class FrontpanelState
 	Frontpanel* context;
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 class StateDefault : public FrontpanelState
 {
 public:
@@ -238,12 +255,17 @@ public:
 	{}
 	void butNEpressed()
 	{
-		context->digPot->setRDAC(255);
+		Serial.println("load current 400mA");
+		context->digPot->setResistor(context->digPotValue4loadCurrent(400));
 	}
 	void butSEpressed()
 	{
 		Serial.print("Return value: ");
 		Serial.println(context->digPot->getRDAC());
+	}
+	void butSWpressed()
+	{
+		context->setCurrentState(context->getStateLoadCurrent());
 	}
 	void encVpressed()
 	{
@@ -295,6 +317,67 @@ public:
 	}
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+class StateLoadCurrent : public FrontpanelState
+{
+public:
+	StateLoadCurrent(Frontpanel* context)
+	: FrontpanelState(context)
+	{}
+	void butSEpressed()
+	{
+		// "Set": Apply load current value
+		context->digPot->setResistor(context->digPotValue4loadCurrent(context->loadCurrents[context->loadCurrentIndex]));
+	}
+	void butSWpressed()
+	{
+		// "Back": change back to default state
+		context->setCurrentState(context->getStateDefault());
+	}
+	void encVpressed()
+	{
+		context->writeConfig();
+	}
+	void encApressed()
+	{
+		context->writeConfig();
+	}
+	void encVcwTurn()
+	{
+		context->loadCurrentIndex = context->getNextLoadCurrentIndex();
+		context->printLoadCurrents();
+	}
+	void encVccwTurn()
+	{
+		context->loadCurrentIndex = context->getPrevLoadCurrentIndex();
+		context->printLoadCurrents();
+	}
+	void showDisplay()
+	{
+		context->display->fillScreen(context->display->BLACK);
+
+		// Button SW
+		context->display->drawButton(10, 0, 60, 20, "Back", context->display->BLACK, context->display->YELLOW);
+		// Button SE
+		context->display->drawButton(90, 0, 60, 20, "Set", context->display->BLACK, context->display->YELLOW);
+
+		context->printLoadCurrents();
+
+		context->display->drawHLine(50,110,53,context->display->GREEN);
+		context->display->drawHLine(50,110,81,context->display->GREEN);
+		context->display->drawVLine(50,53,81, context->display->GREEN);
+		context->display->drawVLine(110,53,81, context->display->GREEN);
+
+		context->display->printTextCentered(38, "Milliamps", context->display->GREEN, context->display->BLACK);
+
+		context->display->printText2xCentered(110, "load current", context->display->GREEN, context->display->BLACK);
+		context->display->drawHLine(0,160,105,context->display->YELLOW);
+
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 #endif /* FRONTPANEL_H_ */

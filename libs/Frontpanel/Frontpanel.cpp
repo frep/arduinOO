@@ -9,7 +9,9 @@
 #include "frep.h"
 
 Frontpanel::Frontpanel()
-: lastReg(0), startVoltage(5.1), maxVoltage(30.0), startCurrent(500), maxCurrent(2000), loadCurrent(1000)
+: lastReg(0), startVoltage(5.1), maxVoltage(30.0), startCurrent(500), maxCurrent(2000), loadCurrentIndex(numberLoadCurValues-1),
+  loadCurrents{ 50,  75, 100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 425, 450, 475, 500, 525, 550,
+	           575, 600, 625, 650, 675, 700, 725, 750, 775, 800, 825, 850, 875, 900, 925, 950, 975, 1000}
 {
 	display = new NhdOledDisplay(160, 128, SDI_PIN, SCL_PIN, RS_PIN, RES_PIN, CS_PIN);
 	mcp     = new Adafruit_MCP23017();
@@ -22,8 +24,9 @@ Frontpanel::Frontpanel()
 	digPot  = new AD5274(AD5274_address, MAX_RES);
 
 	// Statemachine
-	currentState = NULL;
-	stateDefault = new StateDefault(this);
+	currentState     = NULL;
+	stateDefault     = new StateDefault(this);
+	stateLoadCurrent = new StateLoadCurrent(this);
 }
 
 Frontpanel::~Frontpanel()
@@ -202,9 +205,9 @@ void Frontpanel::writeConfig()
 	EEPROM_write(1,'F');
 	EEPROM_write(2,'G');
 
-	EEPROM_write(16,startVoltage);	// Voltage [V]
-	EEPROM_write(20,startCurrent);	// Current [mA]
-	EEPROM_write(24,loadCurrent);	// Current [mA]
+	EEPROM_write(16,startVoltage);	    // Voltage [V]
+	EEPROM_write(20,startCurrent);	    // Current [mA]
+	EEPROM_write(24,loadCurrentIndex);	// [uint8_t]
 
 	EEPROM.commit();
 }
@@ -217,7 +220,7 @@ boolean Frontpanel::readConfig()
 		Serial.println("Configuration Found!");
 		EEPROM_read(16,startVoltage);
 		EEPROM_read(20,startCurrent);
-		EEPROM_read(24, loadCurrent);
+		EEPROM_read(24, loadCurrentIndex);
 		return true;
 	}
 	else
@@ -289,6 +292,11 @@ FrontpanelState* Frontpanel::getStateDefault()
 	return stateDefault;
 }
 
+FrontpanelState* Frontpanel::getStateLoadCurrent()
+{
+	return stateLoadCurrent;
+}
+
 void Frontpanel::setupEncoders()
 {
 	// "Voltage"-Encoder
@@ -307,7 +315,7 @@ void Frontpanel::setupEncoders()
 void Frontpanel::setupDigPot()
 {
 	digPot->init();
-	digPot->setResistor(digPotValue4loadCurrent(loadCurrent));
+	digPot->setResistor(digPotValue4loadCurrent(loadCurrents[loadCurrentIndex]));
 }
 
 void Frontpanel::setupButtons()
@@ -365,3 +373,28 @@ void Frontpanel::setupDisplay()
 
 	delay(2000);
 }
+
+uint8_t Frontpanel::getPrevLoadCurrentIndex()
+{
+	if((loadCurrentIndex-1) < 0)
+	{
+		return numberLoadCurValues-1;
+	}
+	return (loadCurrentIndex-1);
+}
+
+uint8_t Frontpanel::getNextLoadCurrentIndex()
+{
+	return ((loadCurrentIndex+1)%numberLoadCurValues);
+}
+
+void Frontpanel::printLoadCurrents()
+{
+	display->printInt2xCentered(59,loadCurrents[loadCurrentIndex],4,display->GREEN, display->BLACK);
+	display->printIntCentered(64,28,loadCurrents[getPrevLoadCurrentIndex()],4,display->GREEN, display->BLACK);
+	display->printIntCentered(64,132,loadCurrents[getNextLoadCurrentIndex()],4,display->GREEN, display->BLACK);
+}
+
+
+
+
