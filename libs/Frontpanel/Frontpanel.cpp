@@ -206,7 +206,7 @@ void Frontpanel::writeConfig()
 
 	EEPROM_write(16,startVoltage);	    // Voltage [V]
 	EEPROM_write(20,startCurrent);	    // Current [mA]
-	EEPROM_write(24,loadCurrentIndex);	// [uint8_t]
+	EEPROM_write(24,loadCurrentIndex);  // [uint8_t]
 
 	EEPROM.commit();
 }

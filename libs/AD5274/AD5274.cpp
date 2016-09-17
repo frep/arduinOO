@@ -17,6 +17,7 @@ AD5274::~AD5274(){}
 
 void AD5274::init()
 {
+	// enable rdac register changes over i2c
 	Wire.beginTransmission(address);
 	Wire.write(0x1c);
 	Wire.write(0x02);
@@ -43,17 +44,9 @@ bool AD5274::setResistor(uint16_t resistorValue)
 
 void AD5274::setRDAC(uint8_t value)
 {
-	//Serial.print("send value: ");
-	//Serial.print(value);
-	//Serial.println(" to digPot");
 	uint16_t regValue = 0x0400 | (value << 2);
-	//Serial.print("RegValue: 0x");
-	//Serial.println(regValue, HEX);
 	byte val1 = (byte)(regValue >> 8);
 	byte val2 = (byte)((regValue << 8) >> 8);
-	//Serial.print("Send 0x");
-	//Serial.print(val1, HEX);
-	//Serial.print(val2, HEX);
 	Wire.beginTransmission(address);
 	Wire.write(val1);
 	Wire.write(val2);
@@ -78,20 +71,9 @@ uint8_t AD5274::getRDAC()
 
 	Wire.requestFrom(address, 2);
 
-	//int bytes = Wire.available();
-	//Serial.print(bytes);
-	//Serial.println(" bytes on Wire available: ");
-
 	byte val1 = Wire.read();
 	byte val2 = Wire.read();
 	uint16_t regValue = (val1 << 8) | val2;
-
-	//Serial.print("val1: 0x");
-	//Serial.println(val1, HEX);
-	//Serial.print("val2: 0x");
-	//Serial.println(val2, HEX);
-	//Serial.print("regValue: 0x");
-	//Serial.println(regValue, HEX);
 
 	return (uint8_t)((regValue << 6) >> 8);
 }

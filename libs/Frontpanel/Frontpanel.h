@@ -21,21 +21,21 @@
 // DISPLAY DEFINES
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-							// Display-Pin | Function | MCU-Pin
-							// ================================
-							//           1 | GND      | GND
-							//           2 | VDD 3.3V | 3.3V
-							//           3 | NC       | NC
+                            // Display-Pin | Function | MCU-Pin
+                            // ================================
+                            //           1 | GND      | GND
+                            //           2 | VDD 3.3V | 3.3V
+                            //           3 | NC       | NC
 #define    RS_PIN    14     //           4 | D/C      | D6 (variable)
-							//        5-12 | GND      | GND
+                            //        5-12 | GND      | GND
 #define   SDI_PIN    16     //          13 | SDI      | D7
 #define   SCL_PIN     2     //          14 | SCL      | D5
-							//          15 | GND      | GND
+                            //          15 | GND      | GND
 #define   RES_PIN    12     //          16 | /RES     | D0 (variable)
 #define    CS_PIN    13     //          17 | /CS      | D4
-							//          18 | GND      | GND
+                            //          18 | GND      | GND
                             //          19 | PS       | GND
-							//          20 | CPU      | NC (only needed for parallel interface)
+                            //          20 | CPU      | NC (only needed for parallel interface)
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // MCP DEFINES
@@ -105,14 +105,14 @@ public:
 	void loop();
 
 private:
-	NhdOledDisplay*    					display;
-	Adafruit_MCP23017* 					mcp;
-	VirtualButton<Frontpanel>*			butNW;
-	VirtualButton<Frontpanel>*  		butNE;
-	VirtualButton<Frontpanel>*  		butSW;
-	VirtualButton<Frontpanel>*  		butSE;
-	VirtualButtonEncoder<Frontpanel>*	encV;
-	VirtualButtonEncoder<Frontpanel>* 	encA;
+	NhdOledDisplay*                     display;
+	Adafruit_MCP23017*                  mcp;
+	VirtualButton<Frontpanel>*          butNW;
+	VirtualButton<Frontpanel>*          butNE;
+	VirtualButton<Frontpanel>*          butSW;
+	VirtualButton<Frontpanel>*          butSE;
+	VirtualButtonEncoder<Frontpanel>*   encV;
+	VirtualButtonEncoder<Frontpanel>*   encA;
 	AD5274*                             digPot;
 
 	// setup functions
@@ -164,7 +164,7 @@ private:
 	friend              StateDefault;
 	friend              StateLoadCurrent;
 	StateDefault*       stateDefault;
-	StateLoadCurrent*	stateLoadCurrent;
+	StateLoadCurrent*   stateLoadCurrent;
 	void                setCurrentState(FrontpanelState* newState);
 	FrontpanelState*    getStateDefault();
 	FrontpanelState*    getStateLoadCurrent();
@@ -172,13 +172,13 @@ private:
 
 	// ---------------------------------------------------------------
 
-	uint16_t	lastReg;
+	uint16_t    lastReg;
 
-	float 		startVoltage;
-	float		maxVoltage;
+	float       startVoltage;
+	float       maxVoltage;
 
-	uint16_t	startCurrent;
-	uint16_t	maxCurrent;
+	uint16_t    startCurrent;
+	uint16_t    maxCurrent;
 
 	uint8_t     loadCurrentIndex;
 	uint8_t     getPrevLoadCurrentIndex();
