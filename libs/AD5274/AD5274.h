@@ -15,7 +15,7 @@ public:
 	AD5274(uint16_t address, uint32_t maxRes);
 	virtual ~AD5274();
 	void init();
-	bool setResistor(uint16_t resistorValue);
+	bool setResistor(uint32_t resistorValue);
 	void setRDAC(uint8_t value);
 	uint8_t getRDAC();
 private:

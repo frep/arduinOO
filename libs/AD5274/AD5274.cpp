@@ -24,11 +24,11 @@ void AD5274::init()
 	Wire.endTransmission();
 }
 
-bool AD5274::setResistor(uint16_t resistorValue)
+bool AD5274::setResistor(uint32_t resistorValue)
 {
 	if(resistorValue <= maxRes)
 	{
-		uint8_t rdacValue = (uint8_t)(resistorValue*256/maxRes);
+		uint8_t rdacValue = (uint8_t)(resistorValue*255/maxRes);
 		setRDAC(rdacValue);
 		Serial.print("resistor value: ");
 		Serial.print(resistorValue);
