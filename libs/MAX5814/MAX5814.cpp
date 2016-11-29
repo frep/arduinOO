@@ -6,6 +6,7 @@
  */
 
 #include "MAX5814.h"
+#include "Wire.h"
 
 	// DAC SELECTION:
 	uint8_t MAX5814::dacA   = 0x00;
@@ -146,15 +147,16 @@ uint8_t MAX5814::dac2data(uint8_t dac)
 {
 	switch(dac)
 	{
-	case dacA:
+	case 0x00:
 		return 0x01;
-	case dacB:
+	case 0x01:
 		return 0x02;
-	case dacC:
+	case 0x02:
 		return 0x04;
-	case dacD:
+	case 0x03:
 		return 0x08;
 	default:
+		return 0x00;
 	}
 	return 0x00;
 }
